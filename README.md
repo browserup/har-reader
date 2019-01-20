@@ -5,15 +5,15 @@ Read [HTTP Archives](http://www.softwareishard.com/blog/har-12-spec/) with Java.
 
 ```
 <dependency>
-  <groupId>de.sstoehr</groupId>
+  <groupId>com.browserup</groupId>
   <artifactId>har-reader</artifactId>
-  <version>2.1.3</version>
+  <version>3.0.0</version>
 </dependency>
 ```
 
 [![Build Status](https://travis-ci.org/sdstoehr/har-reader.svg?branch=master)](https://travis-ci.org/sdstoehr/har-reader)
 [![Coverage Status](https://coveralls.io/repos/github/sdstoehr/har-reader/badge.svg?branch=master)](https://coveralls.io/github/sdstoehr/har-reader?branch=master)
-[![Maven Central](https://img.shields.io/maven-central/v/de.sstoehr/har-reader.svg)](http://mvnrepository.com/artifact/de.sstoehr/har-reader)
+[![Maven Central](https://img.shields.io/maven-central/v/com.browserup/har-reader.svg)](http://mvnrepository.com/artifact/com.browserup/har-reader)
 
 ## Usage
 
@@ -34,7 +34,7 @@ Har har = harReader.readFromString("{ ... HAR-JSON-Data ... }");
 
 ### Customizing HAR reader
 
-As of version 2.0.0 you can create your own `MapperFactory` [(DefaultMapperFactory)](src/main/java/de/sstoehr/harreader/jackson/DefaultMapperFactory.java)
+As of version 2.0.0 you can create your own `MapperFactory` [(DefaultMapperFactory)](src/main/java/com/browserup/harreader/jackson/DefaultMapperFactory.java)
 
  
 ```java
@@ -57,53 +57,17 @@ You can now use your configuration by instantiating the `HarReader` with your `M
 HarReader harReader = new HarReader(new MyMapperFactory());
 ```
 
-## Latest Releases
+### Building and Testing
 
-### 2.1.3 - 2018-10-18
-
-* Updated dependencies ([CVE-2018-7489](https://nvd.nist.gov/vuln/detail/CVE-2018-7489))
-
-[Details](https://github.com/sdstoehr/har-reader/releases/tag/har-reader-2.1.3)
-
-### 2.1.2 - 2018-08-02
-
-* Added support for several HTTP status codes, e.g. (308, 422 - 451, 505 - 511)
-
-[Details](https://github.com/sdstoehr/har-reader/releases/tag/har-reader-2.1.2)
-
-### 2.1.1 - 2018-07-26
-
-* Added support for HTTP method: ```PATCH```
-
-[Details](https://github.com/sdstoehr/har-reader/releases/tag/har-reader-2.1.1)
-
-### 2.1.0 - 2018-03-11
-
-* You can now access additional fields, which are not part of the HAR spec:
-
-```java
-response.getAdditional().get("_transferSize");
+```bash
+mvn compile
+mvn test
+mvn package
 ```
 
-[Details](https://github.com/sdstoehr/har-reader/releases/tag/har-reader-2.1.0)
+## Latest Releases
 
-### 2.0.3 - 2017-04-14
+### 3.0.0
 
-* Added equals and hashCode methods
-
-### 2.0.2 - 2016-11-21
-
-* Added CCM_POST HttpMethod to enum
-
-### 2.0.1 - 2016-04-16 
-
-* Ignore invalid integers in lax mode
-
-[Details](https://github.com/sdstoehr/har-reader/releases/tag/har-reader-2.0.1)
-
-### 2.0.0 - 2015-08-30
-
-* HAR reader is now easier customizable. Use your own `MapperFactory` to adjust HAR reader for your project!
-* HAR reader threw exceptions, when required fields were empty. This behaviour was changed, so that you can now read non-standard-compliant HAR files
-  
-[Details](https://github.com/sdstoehr/har-reader/releases/tag/har-reader-2.0.0)  
+* Forked from [https://github.com/sdstoehr/har-reader](https://github.com/sdstoehr/har-reader)
+* Renamed package root to `com.browserup`
