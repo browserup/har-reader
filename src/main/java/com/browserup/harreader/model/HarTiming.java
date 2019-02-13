@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
  * Specifically, TimeUnit will truncate the Long nanosecond value to fit into an Integer,
  * without rounding. For example, 999,999 ns == 0 ms, and 1,000,000 ns = 1 ms.
  * Storing the times internally as nanoseconds makes it easier to write unit tests,
- * such as when checking that fast-running operations took > 0ms to complete.
+ * such as when checking that fast-running operations took &gt; 0ms to complete.
  *
  * The de.sdstoehr implementation differs from the lightbody implementation in that
  * it serializes both ways, and is more up to date on the HAR specification, such as
@@ -42,6 +42,7 @@ public class HarTiming {
     /**
      * @return Time spent in a queue waiting for a network connection.
      * -1 if the timing does not apply to the current request.
+     * @param timeUnit param
      */
     public long getBlocked(TimeUnit timeUnit) {
         if (blockedNanos == -1) {
@@ -62,6 +63,7 @@ public class HarTiming {
     /**
      * @return DNS resolution time. The time required to resolve a host name.
      * -1 if the timing does not apply to the current request.
+     * @param timeUnit param
      */
     public long getDns(TimeUnit timeUnit) {
         if (dnsNanos == -1) {
@@ -82,6 +84,7 @@ public class HarTiming {
     /**
      * @return Time required to create TCP connection.
      * -1 if the timing does not apply to the current request.
+     * @param timeUnit param
      */
     public long getConnect(TimeUnit timeUnit) {
         if (connectNanos == -1) {
@@ -102,6 +105,7 @@ public class HarTiming {
     /**
      * @return Time required to send HTTP request to the server, 0 if not present.
      * According to the HAR spec, the send, wait and receive timings are not optional and must have non-negative values.
+     * @param timeUnit param
      */
     public long getSend(TimeUnit timeUnit) {
         return timeUnit.convert(sendNanos, TimeUnit.NANOSECONDS);
@@ -114,6 +118,7 @@ public class HarTiming {
     /**
      * @return Time spent waiting for a response from the server, 0 if not present.
      * According to the HAR spec, the send, wait and receive timings are not optional and must have non-negative values.
+     * @param timeUnit param
      */
     public long getWait(TimeUnit timeUnit) {
         return timeUnit.convert(waitNanos, TimeUnit.NANOSECONDS);
@@ -126,6 +131,7 @@ public class HarTiming {
     /**
      * @return Time spent reading the entire response from the server, 0 if not present.
      * According to the HAR spec, the send, wait and receive timings are not optional and must have non-negative values.
+     * @param timeUnit param
      */
     public long getReceive(TimeUnit timeUnit) {
         return timeUnit.convert(receiveNanos, TimeUnit.NANOSECONDS);
@@ -140,6 +146,7 @@ public class HarTiming {
      * If this field is defined then the time is also included in the connect field
      * (to ensure backward compatibility with HAR 1.1).
      * -1 if the timing does not apply to the current request.
+     * @param timeUnit param
      */
     public long getSsl(TimeUnit timeUnit) {
         if (sslNanos == -1) {
