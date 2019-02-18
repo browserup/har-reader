@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.sonatype.oss</groupId>
         <artifactId>oss-parent</artifactId>
-        <version>7</version>
+        <version>9</version>
     </parent>
 
     <groupId>com.browserup</groupId>
@@ -15,12 +15,23 @@
 
     <name>har-reader</name>
     <description>A library to access HTTP archive format with Java</description>
-    <url>https://github.com/sdstoehr/har-reader</url>
+    <url>https://github.com/browserup/har-reader</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jackson.version>2.9.7</jackson.version>
     </properties>
+
+    <distributionManagement>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <dependencies>
         <dependency>
@@ -77,6 +88,59 @@
                 <configuration>
                     <format>xml</format>
                     <maxmem>256m</maxmem>
+                    <check/>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
+                <executions>
+                    <execution>
+                        <id>package-javadoc</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.8</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
                 </configuration>
             </plugin>
         </plugins>
@@ -84,9 +148,9 @@
 
     <developers>
         <developer>
-            <id>sdstoehr</id>
-            <name>Sebastian Stöhr</name>
-            <email>sebastian@sebastianstoehr.de</email>
+            <id>browserup</id>
+            <name>BrowserUp, Inc.</name>
+            <email>developers@browserup.com</email>
         </developer>
     </developers>
 
@@ -99,8 +163,8 @@
     </licenses>
 
     <scm>
-        <url>https://github.com/sdstoehr/har-reader.git</url>
-        <connection>scm:git:git@github.com:sdstoehr/har-reader.git</connection>
-        <developerConnection>scm:git:git@github.com:sdstoehr/har-reader.git</developerConnection>
+        <url>https://github.com/browserup/har-reader.git</url>
+        <connection>scm:git:git@github.com:browserup/har-reader.git</connection>
+        <developerConnection>scm:git:git@github.com:browserup/har-reader.git</developerConnection>
     </scm>
 </project>
