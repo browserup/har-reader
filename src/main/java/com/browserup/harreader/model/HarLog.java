@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 /**
  * Root object of exported data.
@@ -122,5 +123,83 @@ public class HarLog {
     @Override
     public int hashCode() {
         return Objects.hash(version, creator, browser, pages, entries, comment);
+    }
+
+    /**
+     * Search the entire log for the most recent entry whose request URL matches the given <code>url</code>.
+     *
+     * @param url Exact string match of a URL to find.
+     *            Optionally include wildcard "*" characters for non-greedy wildcard pattern matching.
+     *            For example, "*.js", or "*.com/accounts/*.jsp?query_params=*"
+     *            URLs are formatted as: scheme://host:port/path?querystring.
+     *            Port is not included in the URL if it is the standard port for the scheme.
+     *            Fragments (example.com/#fragment) should not be included in the URL.
+     *            If more than one URL is found, return the most recently requested URL.
+     * @return <code>HarEntry</code> for the most recently requested URL matching the given <code>url</code>.
+     */
+    public HarEntry findEntry(String url) {
+        // TODO
+        return null;
+    }
+
+    /**
+     * Search the entire log for the most recent entry whose request URL matches the given <code>url</code>.
+     *
+     * @param url Regular expression match of URL to find.
+     *            URLs are formatted as: scheme://host:port/path?querystring.
+     *            Port is not included in the URL if it is the standard port for the scheme.
+     *            Fragments (example.com/#fragment) should not be included in the URL.
+     *            If more than one URL found, return the most recently requested URL.
+     * @return <code>HarEntry</code> for the most recently requested URL matching the given <code>url</code> pattern.
+     */
+    public HarEntry findEntry(Pattern url) {
+        // TODO
+        return null;
+    }
+
+    /**
+     * Search the entire log for entries whose request URL matches the given <code>url</code>.
+     *
+     * @param url Exact string match of a URL to find.
+     *            Optionally include wildcard "*" characters for non-greedy wildcard pattern matching.
+     *            For example, "*.js", or "*.com/accounts/*.jsp?query_params=*"
+     *            URLs are formatted as: scheme://host:port/path?querystring.
+     *            Port is not included in the URL if it is the standard port for the scheme.
+     *            Fragments (example.com/#fragment) should not be included in the URL.
+     * @return A list of <code>HarEntry</code> for any requests whose URL matches the given <code>url</code> pattern,
+     *         or an empty list if none match.
+     */
+    public List<HarEntry> findEntries(String url) {
+        // TODO
+        return null;
+    }
+
+    /**
+     * Search the entire log for entries whose request URL matches the given <code>url</code>.
+     *
+     * @param url Regular expression match of URL to find.
+     *            URLs are formatted as: scheme://host:port/path?querystring.
+     *            Port is not included in the URL if it is the standard port for the scheme.
+     *            Fragments (example.com/#fragment) should not be included in the URL.
+     *            If more than one URL found, use the most recently requested URL.
+     *
+     * @return A list of <code>HarEntry</code> for any requests whose URL matches the given <code>url</code> pattern,
+     *         or an empty list if none match.
+     */
+    public List<HarEntry> findEntries(Pattern url) {
+        // TODO
+        return null;
+    }
+
+    /**
+     * Search the entire log for the most recent page whose id matches the given <code>id</code>.
+     *
+     * @param id Exact string match of a page's ID to find.
+     *            If more than one page is found, return the most recent page found.
+     * @return The most recent <code>HarPage</code> whose ID matches the given <code>id</code>.
+     */
+    public HarPage findPage(String id) {
+        // TODO
+        return null;
     }
 }
