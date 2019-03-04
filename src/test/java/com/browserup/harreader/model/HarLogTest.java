@@ -1,5 +1,9 @@
 package com.browserup.harreader.model;
 
+import java.time.Instant;
+import java.util.Date;
+import java.util.Optional;
+import java.util.regex.Pattern;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -60,6 +64,71 @@ public class HarLogTest extends AbstractMapperTest<HarLog> {
         HarLog log = new HarLog();
         log.setBrowser(null);
         Assert.assertNotNull(log.getBrowser());
+    }
+
+    @Test
+    public void testFindEntries() {
+        Pattern urlPattern = Pattern.compile("http://abc\\.com\\?param=\\d?");
+        HarLog log = new HarLog();
+        int entriesNumber = 10;
+
+        for (int i = 0; i < entriesNumber; i++) {
+            HarEntry entry = new HarEntry();
+            HarRequest request1 = new HarRequest();
+            request1.setUrl("http://abc.com?param=" + i);
+            entry.setRequest(request1);
+            log.getEntries().add(entry);
+        }
+
+        Assert.assertEquals("Expected to find all entries",
+            log.findEntries(urlPattern).size(), entriesNumber);
+    }
+
+    @Test
+    public void testFindEntryReturnsEmpty() {
+        String url = "http://abc.com";
+        Pattern urlPattern = Pattern.compile("^doesnotmatch?");
+
+        HarLog log = new HarLog();
+
+        HarEntry entry = new HarEntry();
+        HarRequest req = new HarRequest();
+        req.setUrl(url);
+        entry.setRequest(req);
+
+        log.getEntries().add(entry);
+
+        Assert.assertFalse("Expected to get empty entry",
+            log.findEntry(urlPattern).isPresent());
+    }
+
+    @Test
+    public void testFindEntryReturnsMostRecentEntry() {
+        String url = "http://abc.com";
+        Date firstDate = Date.from(Instant.ofEpochSecond(1000));
+        Date secondDate = Date.from(Instant.ofEpochSecond(2000));
+
+        HarLog log = new HarLog();
+
+        HarEntry entry1 = new HarEntry();
+        HarRequest request1 = new HarRequest();
+        request1.setUrl(url);
+        entry1.setRequest(request1);
+        entry1.setStartedDateTime(firstDate);
+
+        HarEntry entry2 = new HarEntry();
+        HarRequest request2 = new HarRequest();
+        request2.setUrl(url);
+        entry2.setRequest(request2);
+        entry2.setStartedDateTime(secondDate);
+
+        log.getEntries().add(entry1);
+        log.getEntries().add(entry2);
+
+        Optional<HarEntry> entry = log.findEntry(Pattern.compile("^http://abc\\.com?"));
+        Assert.assertTrue("Expected to find entry", entry.isPresent());
+        Assert.assertEquals("Expected to find the most recent entry",
+            entry.get().getStartedDateTime(), secondDate);
     }
 
     @Override
