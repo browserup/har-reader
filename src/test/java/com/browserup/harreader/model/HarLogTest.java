@@ -99,7 +99,7 @@ public class HarLogTest extends AbstractMapperTest<HarLog> {
         log.getEntries().add(entry);
 
         Assert.assertFalse("Expected to get empty entry",
-            log.findEntry(urlPattern).isPresent());
+            log.findMostRecentEntry(urlPattern).isPresent());
     }
 
     @Test
@@ -125,7 +125,7 @@ public class HarLogTest extends AbstractMapperTest<HarLog> {
         log.getEntries().add(entry1);
         log.getEntries().add(entry2);
 
-        Optional<HarEntry> entry = log.findEntry(Pattern.compile("^http://abc\\.com?"));
+        Optional<HarEntry> entry = log.findMostRecentEntry(Pattern.compile("^http://abc\\.com?"));
         Assert.assertTrue("Expected to find entry", entry.isPresent());
         Assert.assertEquals("Expected to find the most recent entry",
             entry.get().getStartedDateTime(), secondDate);

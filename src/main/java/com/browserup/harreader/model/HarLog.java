@@ -138,9 +138,16 @@ public class HarLog {
      *            Port is not included in the URL if it is the standard port for the scheme.
      *            Fragments (example.com/#fragment) should not be included in the URL.
      *            If more than one URL found, return the most recently requested URL.
+     *            Pattern examples:
+     *            - To match URL with http/https protocols and domain abc.com without parameters:
+     *              ^(http|https)://abc\\.com?
+     *            - To match URL with http protocol and domain abc.com and any parameters (or no parameters)
+     *              ^http://abc\\.com(\\z|\\?.*)
+     *            - To match URL with http protocol and domain abc.com and UUID parameter named 'id':
+     *              ^http://abc\\.com\\?id=[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}?
      * @return <code>HarEntry</code> for the most recently requested URL matching the given <code>url</code> pattern.
      */
-    public Optional<HarEntry> findEntry(Pattern url) {
+    public Optional<HarEntry> findMostRecentEntry(Pattern url) {
         return findEntries(new HarEntriesUrlPatternFilter(url)).stream()
             .max(Comparator.comparing(HarEntry::getStartedDateTime));
     }
@@ -153,6 +160,13 @@ public class HarLog {
      *            Port is not included in the URL if it is the standard port for the scheme.
      *            Fragments (example.com/#fragment) should not be included in the URL.
      *            If more than one URL found, use the most recently requested URL.
+     *            Pattern examples:
+     *            - To match URL with http/https protocols and domain abc.com without parameters:
+     *              ^(http|https)://abc\\.com?
+     *            - To match URL with http protocol and domain abc.com and any parameters (or no parameters)
+     *              ^http://abc\\.com(\\z|\\?.*)
+     *            - To match URL with http protocol and domain abc.com and UUID parameter named 'id':
+     *              ^http://abc\\.com\?id=[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}?
      *
      * @return A list of <code>HarEntry</code> for any requests whose URL matches the given <code>url</code> pattern,
      *         or an empty list if none match.
