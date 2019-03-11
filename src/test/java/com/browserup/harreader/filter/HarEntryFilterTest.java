@@ -17,59 +17,57 @@ import static org.mockito.Mockito.when;
 @RunWith(Parameterized.class)
 public class HarEntryFilterTest {
 
-    private static class TestData {
-        private final String url;
-        private final Boolean result;
-        private final String pattern;
-
-        TestData(String url, Boolean result, String pattern) {
-            this.url = url;
-            this.result = result;
-            this.pattern = pattern;
-        }
-    }
-
     private static final TestData[] TEST_DATA = new TestData[]{
         new TestData(
-            "http://abc.com",
+            "http://example.com/index.html",
             true,
-            "^(http|https)://abc(\\d?).com?"),
+            "^(http|https)://example\\.com/index\\.html$"),
+        // URL path doesn't match
         new TestData(
-            "http://abc1.com",
+            "http://example.com/index2.html",
+            false,
+            "^(http|https)://example\\.com/index\\.html$"),
+        // Protocol doesn't match
+        new TestData(
+            "ftp://example.com/index.html",
+            false,
+            "^(http|https)://example\\.com/index\\.html$"),
+        // Domain doesn't match
+        new TestData(
+            "http://example-abc.com/index.html",
+            false,
+            "^(http|https)://example\\.com/index\\.html$"),
+        new TestData(
+            "http://example.com/customer?id=123",
             true,
-            "^(http|https)://abc(\\d?).com?"),
+            "^http://example\\.com/customer\\?.*"),
         new TestData(
-            "https://abc.com?id=" + UUID.randomUUID(),
+            "http://example.com/customer",
             true,
-            "^https://abc\\.com\\?id=[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}?"),
+            "^http://example\\.com/customer\\??.*"),
         new TestData(
-            "https://abc.com?id=" + UUID.randomUUID() + "invalid_uuid",
-            false,
-            "^https://abc\\.com\\?id=[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}?"),
-        new TestData(
-            "http://abc.com?someparam=someparam1",
+            "http://example.com/customer?",
             true,
-            "^http://abc\\.com(\\z|\\?.*)"),
+            "^http://example\\.com/customer\\??.*"),
+        // Protocol doesn't match
         new TestData(
-            "http://abc.com",
+            "https://example.com/customer?",
+            false,
+            "^http://example\\.com/customer\\??.*"),
+        // URL path doesn't match
+        new TestData(
+            "https://example.com/custome",
+            false,
+            "^http://example\\.com/customer\\??.*"),
+        new TestData(
+            "https://example.com/products?id=" + UUID.randomUUID(),
             true,
-            "^http://abc\\.com(\\z|\\?.*)"),
+            "^https://example\\.com/products\\?id=[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}$"),
+        // UUID doesn't match (invalid UUID)
         new TestData(
-            "http://abc.com;invalid",
+            "https://example.com/products?id=" + UUID.randomUUID().toString().substring(1),
             false,
-            "^http://abc\\.com(\\z|\\?.*)"),
-        new TestData(
-            "ftp://abc.com",
-            false,
-            "^(http|https)://abc(\\d?).com?"),
-        new TestData(
-            "http://abcd.com",
-            false,
-            "^(http|https)://abc(\\d?).com?"),
-        new TestData(
-            "http:/abc.com",
-            false,
-            "^(http|https)://abc(\\d?).com?"),
+            "^http://example\\.com/products\\?id=[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}$")
     };
 
     private TestData data;
@@ -92,6 +90,22 @@ public class HarEntryFilterTest {
         when(harEntry.getRequest()).thenReturn(harRequest);
         when(harRequest.getUrl()).thenReturn(data.url);
 
-        Assert.assertEquals(data.result, filter.test(harEntry));
+        Assert.assertEquals(
+            String.format(
+                "Expected to get matcher result: %s, for the following pattern: \n'%s\n' and input string: \n'%s'",
+                data.result.toString(), data.pattern, harEntry.getRequest().getUrl()),
+            data.result, filter.test(harEntry));
+    }
+
+    private static class TestData {
+        private final String url;
+        private final Boolean result;
+        private final String pattern;
+
+        TestData(String url, Boolean result, String pattern) {
+            this.url = url;
+            this.result = result;
+            this.pattern = pattern;
+        }
     }
 }
